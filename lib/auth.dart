@@ -1,0 +1,30 @@
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:onboarding_screen/login_success_page.dart';
+import 'login_success_page.dart';
+import 'signin/sign_in.dart'; //to check your session /state.
+
+class AuthPage extends StatelessWidget {
+  const AuthPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          } else {
+            if (snapshot.hasData) {
+              return LoginSuccessPage();
+            } else {
+              return SignInScreen();
+            }
+          }
+        },
+      ),
+    );
+  }
+}
